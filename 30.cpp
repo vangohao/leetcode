@@ -37,52 +37,27 @@ public:
             m = newwords[i].length();
         }
         int * tmp = new int[n];
-        int * tmp2 = new int[n1];
-        for(int i = 0; i<n1; ++i) tmp2[i] = newcounts[i];
+
         for(int i = 0; i<n; ++i) tmp[i] = -1;
         for(int i = 0; i<m; ++i)
         {
-            int j = 0;
-            int k = 0;
-            while(k * m + i < l)
+            for(int k = 0;(k+n -1) * m + i<l; ++k)
             {
-                if(mp2[k * m + i] == -1)
-                {
-                    j = 0;
-                    k++;
-                    for(int r = 0; r<n1; ++r) tmp2[r] = newcounts[r];
-                }
-                else
-                if(j<n)
-                {
-                    if(tmp2[mp2[k*m+i]] == 0)
-                    {
-                        j = 1;
-                        tmp[mp2[k * m + i]] = k;
-                        for(int r = 0; r<n1; ++r) tmp2[r] = newcounts[r];
-                        tmp2[mp2[k*m+i]] --;
-                        k++;
-                    }
-                    else
-                    {
-                        tmp[mp2[k * m + i]] = k;
-                        tmp2[mp2[k * m + i]] --;
-                        j++;k++;
-                    }
-                }
-                else 
-                {
-                    int j1 = j;
-                    j = k - tmp[mp2[k * m + i]];
-                    for(int r = k-j1;r<=k-j;++r)
-                        tmp2[mp2[r * m + i]] ++;
-                    k++;
-                }
+                int * tmp2 = new int[n1];
+                for(int i = 0; i<n1; ++i) tmp2[i] = newcounts[i];
 
-                if(j == n)
+                bool flag = true;
+                for(int r = 0;r<n;++r)
                 {
-                    result.push_back((k - j) * m + i);
+                    if(mp2[(k+r) * m + i] == -1)
+                        {flag = false;break;}
+                    else{
+                        tmp2[mp2[(k+r)*m +i]]--;
+                        if(tmp2[mp2[(k+r)*m +i]]<0)
+                        {flag = false; break;}
+                    }
                 }
+                if(flag) result.push_back(k * m + i)
             }
         }
         return result;
